@@ -22,15 +22,15 @@ public class UserController {
         UserResponseDTO savedUser= userService.addUser(userRequestDTO);
         return new ResponseEntity(savedUser, HttpStatus.CREATED);
     }
-    @GetMapping("/get/{id}")
-    public ResponseEntity getByEmailId(@PathVariable String id) throws Exception {
-        User user=userService.getByemailId(id);
-        return new ResponseEntity(user,HttpStatus.OK);
+    @GetMapping("/get/{emailId}")
+    public ResponseEntity getByEmailId(@PathVariable String emailId) throws Exception {
+        User user=userService.getByemailId(emailId);
+        return new ResponseEntity(user,HttpStatus.FOUND);
     }
 
-    @GetMapping("/get-above/{id}")
-    public ResponseEntity getUsersAbove(@PathVariable int id){
-        List<String> list=userService.getUsersAbove(id);
+    @GetMapping("/get-above/{age}")
+    public ResponseEntity getUsersAbove(@PathVariable int age){
+        List<String> list=userService.getUsersAbove(age);
         return new ResponseEntity(list, HttpStatusCode.valueOf(200));
     }
 }

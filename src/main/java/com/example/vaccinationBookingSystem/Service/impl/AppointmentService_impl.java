@@ -3,6 +3,7 @@ package com.example.vaccinationBookingSystem.Service.impl;
 import com.example.vaccinationBookingSystem.Dto.RequestDto.AppointmentRequestDTO;
 import com.example.vaccinationBookingSystem.Dto.ResponseDto.AppointmentResponseDTO;
 import com.example.vaccinationBookingSystem.Enum.DoseNo;
+import com.example.vaccinationBookingSystem.Exception.AlreadyTakenDose1Exception;
 import com.example.vaccinationBookingSystem.Model.*;
 import com.example.vaccinationBookingSystem.Repository.AppointmentRepository;
 import com.example.vaccinationBookingSystem.Repository.DoctorRepository;
@@ -23,7 +24,7 @@ public class AppointmentService_impl implements AppointmentService {
     @Autowired
     AppointmentRepository appointmentRepository;
     @Override
-    public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO appointmentRequestDTO) throws Exception {
+    public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO appointmentRequestDTO) throws Exception,RuntimeException {
         Optional<User> op1=userRepository.findById(appointmentRequestDTO.getUserId());
         if(op1.isEmpty()){
             throw new Exception("No User found with userId: "+appointmentRequestDTO.getUserId());
@@ -43,7 +44,7 @@ public class AppointmentService_impl implements AppointmentService {
             user.setDose1(dose1);
         }
         else if(appointmentRequestDTO.getDoseNo()==DoseNo.DOSE_1 && user.isDose1Taken()){
-            throw new Exception("Already taken Dose 1");
+            throw new AlreadyTakenDose1Exception();//Exception("Already taken Dose 1");
         }
         else if(appointmentRequestDTO.getDoseNo()==DoseNo.DOSE_2 && !user.isDose1Taken()){
             throw new Exception("First register for Dose 1");

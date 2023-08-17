@@ -36,11 +36,7 @@ public class UserService_impl implements UserService {
 
     @Override
     public List<String> getUsersAbove(int id) {
-        List<User> userList=userRepository.getAboveGivenAge(id);
-        List<String> list=new ArrayList<>();
-        for(User x:userList){
-            list.add(x.getName());
-        }
-        return list;
+        List<String> userList=userRepository.getAboveGivenAge(id);
+        return userList;
     }
 }
