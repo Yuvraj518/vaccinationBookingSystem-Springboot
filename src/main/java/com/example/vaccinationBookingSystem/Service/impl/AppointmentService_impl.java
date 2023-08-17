@@ -3,7 +3,7 @@ package com.example.vaccinationBookingSystem.Service.impl;
 import com.example.vaccinationBookingSystem.Dto.RequestDto.AppointmentRequestDTO;
 import com.example.vaccinationBookingSystem.Dto.ResponseDto.AppointmentResponseDTO;
 import com.example.vaccinationBookingSystem.Enum.DoseNo;
-import com.example.vaccinationBookingSystem.Exception.AlreadyTakenDose1Exception;
+import com.example.vaccinationBookingSystem.Exception.*;
 import com.example.vaccinationBookingSystem.Model.*;
 import com.example.vaccinationBookingSystem.Repository.AppointmentRepository;
 import com.example.vaccinationBookingSystem.Repository.DoctorRepository;
@@ -27,11 +27,11 @@ public class AppointmentService_impl implements AppointmentService {
     public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO appointmentRequestDTO) throws Exception,RuntimeException {
         Optional<User> op1=userRepository.findById(appointmentRequestDTO.getUserId());
         if(op1.isEmpty()){
-            throw new Exception("No User found with userId: "+appointmentRequestDTO.getUserId());
+            throw new NoUserFoundException(appointmentRequestDTO.getUserId());
         }
         Optional<Doctor> op2=doctorRepository.findById(appointmentRequestDTO.getDoctorId());
         if(op2.isEmpty()){
-            throw new Exception("No Dr. found with doctorId: "+appointmentRequestDTO.getDoctorId());
+            throw new NoDoctorPresentException(appointmentRequestDTO.getDoctorId());
         }
         User user=op1.get();
         Doctor doctor=op2.get();
@@ -47,10 +47,10 @@ public class AppointmentService_impl implements AppointmentService {
             throw new AlreadyTakenDose1Exception();//Exception("Already taken Dose 1");
         }
         else if(appointmentRequestDTO.getDoseNo()==DoseNo.DOSE_2 && !user.isDose1Taken()){
-            throw new Exception("First register for Dose 1");
+            throw new FirstTakeDose1Exception();//Exception("First register for Dose 1");
         }
         else if(appointmentRequestDTO.getDoseNo()==DoseNo.DOSE_2 && user.isDose2Taken()){
-            throw new Exception("Already taken dose 2");
+            throw new AlreadyTakenDose2Exception();//Exception("Already taken dose 2");
         }
         else{
             user.setDose2Taken(true);
